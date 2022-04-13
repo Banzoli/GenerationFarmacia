@@ -4,8 +4,6 @@ import java.util.List;
 
 import org.generation.BdFarmacia.model.Categoria;
 import org.generation.BdFarmacia.repository.CategoriaRepository;
-
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -21,9 +19,11 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @CrossOrigin(origins = "*", allowedHeaders = "*")
-@RequestMapping("/categoria")
+@RequestMapping("/Categoria")
 public class CategoriaController {
-	
+
+
+
 	@Autowired
 	private CategoriaRepository repository;
 	
@@ -37,10 +37,15 @@ public class CategoriaController {
 		return repository.findById(id).map(resp -> ResponseEntity.ok(resp))
 				.orElse(ResponseEntity.notFound().build());
 	}
-	
+
 	@GetMapping("/nome/{nome}")
-	public ResponseEntity<List<Categoria>> getByName(@PathVariable String nome){
-		return ResponseEntity.ok(repository.findAllByDescricaoContainingIgonoreCase(nome));
+	public ResponseEntity<List<Categoria>> getByNome(@PathVariable String nome){
+		return ResponseEntity.ok(repository.findAllByNomeContainingIgnoreCase(nome));
+	}
+	
+	@GetMapping("/descicao/{descricao}")
+	public ResponseEntity<List<Categoria>> getByDescricao(@PathVariable String descricao){
+		return ResponseEntity.ok(repository.findAllByDescricaoContainingIgnoreCase(descricao));
 	}
 	
 	@PostMapping
@@ -48,15 +53,14 @@ public class CategoriaController {
 		return ResponseEntity.status(HttpStatus.CREATED)
 				.body(repository.save(categoria));
 	}
-
+	
 	@PutMapping
 	public ResponseEntity<Categoria> put (@RequestBody Categoria categoria){
-		return ResponseEntity.ok(repository.save(categoria));				
+		return ResponseEntity.ok(repository.save(categoria));
 	}
 	
 	@DeleteMapping("/{id}")
 	public void delete(@PathVariable long id) {
 		repository.deleteById(id);
 	}
-	
 }
